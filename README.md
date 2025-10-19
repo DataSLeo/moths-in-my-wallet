@@ -14,6 +14,18 @@ Moths in My Wallet is a website designed for personal financial organization.
 - Maven
 
 
+## Database
+
+Script to create the database
+[`database/schema_mothsinmywallet.sql`](database/schema_mothsinmywallet.sql)
+
+Entity-Relationship Model - PDF
+[`docs/erm_mothsinmywallet.pdf`](docs/erm_mothsinmywallet.pdf)
+
+Entity-Relationship Model - MWB
+[`docs/erm_mothsinmywallet.mwb`](docs/erm_mothsinmywallet.mwb)
+
+
 ## How to setup
 
 
