@@ -45,20 +45,20 @@ CREATE DATABASE mothsinmywallet;
 ```
 
 
-### Configure .env's file
+### Configure secrets.properties's file
 
-In the project's root directory, create a `.env` file and add the following content:
+In the project's root directory, create a `secrets.properties` file and add the following content:
 
 ```env
-DB_URL=jdbc:mysql://localhost::3306/mothsinmywallet 
-DB_USER=your_user_of_mysql
-DB_PASSSWORD=your_password_of_mysql
+db.connection.url=jdbc:mysql://localhost:3306/mothsinmywallet
+db.connection.user=your_user
+db.connection.password=your_password
 ```
 
 Note:
 
 - Make sure the port (3306) matches your MySQL Server configuration.
-- Check that the `.env` file is listed in your `.gitignore` (so your credentials aren’t uploaded to GitHub).
+- Check that the `secrets.properties` file is listed in your `.gitignore` (so your credentials aren’t uploaded to GitHub).
 
 
 ### Run
