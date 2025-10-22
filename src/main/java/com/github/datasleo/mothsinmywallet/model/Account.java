@@ -18,6 +18,12 @@ public class Account {
     private String password;
     private String username;
 
+    public Account(String email, String password, String username) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+    }
+
     public Account() {}
 
     public Long getId() {
