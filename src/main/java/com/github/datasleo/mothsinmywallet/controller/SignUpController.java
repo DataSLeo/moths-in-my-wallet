@@ -1,6 +1,5 @@
 package com.github.datasleo.mothsinmywallet.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +16,15 @@ import com.github.datasleo.mothsinmywallet.service.AccountService;
 @Controller
 @RequestMapping("/signup")
 public class SignUpController {
-  
-    @Autowired
-    private AccountService accountService;
+
+    private final AccountService accountService;
+
+    public SignUpController (AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @GetMapping
-    public String showForms() {
+    public String getSignUp() {
         return "signup";
     }
 
@@ -32,7 +34,7 @@ public class SignUpController {
         try {
       
             accountService.createAccount(signUpDto);
-            return "redirect:/";
+            return "redirect:/login";
       
         } catch (EmailAlreadyExistsException | PasswordAndRepeatPasswordAreNotEqualsException | UsernameAlreadyExistsException e) {
       

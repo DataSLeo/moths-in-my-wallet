@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="pt-br">
+<head>
+    <title>Home - Moths In My Wallet</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Welcome <span th:text="${username}"></span></h1>
+
+    <form th:action="@{/logout}" method="POST">
+        <button type="submit">Logout</button>
+    </form>
+</body>
+</html>

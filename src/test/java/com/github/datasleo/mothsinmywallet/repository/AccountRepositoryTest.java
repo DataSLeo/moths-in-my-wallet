@@ -2,11 +2,10 @@ package com.github.datasleo.mothsinmywallet.repository;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.datasleo.mothsinmywallet.model.Account;
 
@@ -21,12 +20,8 @@ public class AccountRepositoryTest {
     @Autowired
     private EntityManager entityManager;
 
-//--------------------------------------------------------------
-// Scenario 01: Insert the email and verify if exists in H2 db
-//--------------------------------------------------------------
-
     @Test
-    public void WhenFindByEmailThenReturnAccount() throws Exception {
+    public void WhenFindEmail_MustReturnAccount() throws Exception {
 
         Account account = new Account("test@test.com", "password123", "fooandbar123");
 
@@ -41,12 +36,8 @@ public class AccountRepositoryTest {
 
     }
 
-//-------------------------------------------
-// Scenario 02: Verify if the email not exists
-//-------------------------------------------
-
     @Test
-    public void VerifyIfEmailExistsThenReturnEmpty() throws Exception {
+    public void WhenEmailNotExists_MustReturnEmptyAccount() throws Exception {
 
         Optional<Account> result = accountRepository.findByEmail("test@test.com");
 
@@ -54,12 +45,8 @@ public class AccountRepositoryTest {
 
     }
 
-//----------------------------------------------------------------
-// Scenario 03: Insert the username and verify if exists in H2 db
-//----------------------------------------------------------------
-
     @Test
-    public void WhenFindByUsernameThenReturnAccount() throws Exception {
+    public void WhenFindUsername_MustReturnAccount() throws Exception {
 
         Account account = new Account("test@test.com", "password123", "fooandbar123");
 
@@ -73,12 +60,8 @@ public class AccountRepositoryTest {
 
     }
 
-//-----------------------------------------
-// Scenario 04: Verify if username exists 
-//-----------------------------------------
-
     @Test
-    public void VerifyIfUsernameExistsThenReturnEmpty() throws Exception {
+    public void WhenUsernameNotExists_MustReturnEmptyAccount() throws Exception {
 
         Optional<Account> result = accountRepository.findByUsername("fooandbar123");
 

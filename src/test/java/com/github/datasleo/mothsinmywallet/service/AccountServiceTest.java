@@ -5,7 +5,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +12,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,13 +45,8 @@ public class AccountServiceTest {
         validSignUpDto = new SignUpDto("test@test.com", "password123", "password123", "fooandbar123");
     }
 
-    
-// -----------------------------
-// Scenario 01: Created account
-// -----------------------------
-
     @Test
-    public void MustCreateAccount () throws Exception {
+    public void WhenCreateAccount_MustCreateAccount () throws Exception {
 
         when(accountRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(accountRepository.findByUsername(anyString())).thenReturn(Optional.empty());
@@ -83,21 +76,19 @@ public class AccountServiceTest {
 
     }
 
-
-// --------------------------------------------------------
-// Scenario 02: Account not created, email already exists
-// --------------------------------------------------------
-
     @Test
-    public void MustGenerateEmailAlreadyExistsException () throws Exception {
+    public void WhenCreateAccountWithAlreadyEmail_MustReturnEmailAlreadyExistsException () throws Exception {
 
         Account existsEmail = new Account();
 
         when(accountRepository.findByEmail(anyString())).thenReturn(Optional.of(existsEmail));
 
-        assertThrows(EmailAlreadyExistsException.class, () -> {
-            accountService.createAccount(validSignUpDto);
-        });
+        EmailAlreadyExistsException thrown = assertThrows(
+            EmailAlreadyExistsException.class,
+            () -> accountService.createAccount(validSignUpDto)
+        );
+
+        assertEquals("Email test@test.com already exists.", thrown.getMessage());
 
         verify(accountRepository, times(1)).findByEmail(anyString());
         verify(accountRepository, never()).findByUsername(anyString());
@@ -106,20 +97,19 @@ public class AccountServiceTest {
     
     }
 
-// -----------------------------------------------------------
-// Scenario 03: Account not created, password are not equals
-// -----------------------------------------------------------
-
     @Test
-    public void MustGeneratePasswordAndRepeatPasswordAreNotEqualsException() throws Exception {
+    public void WhenCreateAccountWithPasswordsNotEquals_MustReturnPasswordAndRepeatPasswordAreNotEqualsException() throws Exception {
 
         SignUpDto passwordsAreNotEquals = new SignUpDto("test@test.com", "password123", "123456", "fooandbar123");
 
         when(accountRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(PasswordAndRepeatPasswordAreNotEqualsException.class, () -> {
-            accountService.createAccount(passwordsAreNotEquals);
-        });
+        PasswordAndRepeatPasswordAreNotEqualsException thrown = assertThrows(
+            PasswordAndRepeatPasswordAreNotEqualsException.class,
+            () -> accountService.createAccount(passwordsAreNotEquals)
+        );
+
+        assertEquals("Passwords are not equals.", thrown.getMessage());
 
         verify(accountRepository, times(1)).findByEmail(anyString());
         verify(accountRepository, never()).findByUsername(anyString());
@@ -128,21 +118,20 @@ public class AccountServiceTest {
 
     }
 
-// ---------------------------------------------------
-// Scenario 04: Account not created, username exists
-// ---------------------------------------------------
-
     @Test
-    public void MustGenerateUsernameAlreadyExistsException () throws Exception {
+    public void WhenCreateAccountWithAlreadyUsername_MustReturnUsernameAlreadyExistsException () throws Exception {
 
         Account existsAccount = new Account();
 
         when(accountRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(accountRepository.findByUsername(anyString())).thenReturn(Optional.of(existsAccount));
 
-        assertThrows(UsernameAlreadyExistsException.class, () -> {
-            accountService.createAccount(validSignUpDto);
-        });
+        UsernameAlreadyExistsException thrown = assertThrows(
+            UsernameAlreadyExistsException.class,
+            () -> accountService.createAccount(validSignUpDto)
+        );
+
+        assertEquals("Username fooandbar123 already exists.", thrown.getMessage());
 
         verify(accountRepository, times(1)).findByEmail(anyString());
         verify(accountRepository, times(1)).findByUsername(anyString());    
