@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmls:th="http://thymeleaf.org" lang="pt-br">
+<html xmlns:th="http://thymeleaf.org" lang="pt-br">
 <head>
     <title>Sign up - Moths In My Wallet</title>
     <meta charset="UTF-8">
@@ -10,7 +10,7 @@
 
     <h1>Sign out</h1>
 
-    <form method="POST" action="/signup">
+    <form th:action="@{/signup}" method="POST">
         <label for="email">E-mail</label>
         <input type="email" id="email" name="email" placeholder="E-mail" required>
 
