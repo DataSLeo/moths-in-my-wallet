@@ -1,21 +1,28 @@
 package com.github.datasleo.mothsinmywallet.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.mockito.Mockito.*;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.github.datasleo.mothsinmywallet.config.SecurityConfig;
 import com.github.datasleo.mothsinmywallet.dto.SignUpDto;
@@ -26,21 +33,23 @@ import com.github.datasleo.mothsinmywallet.service.AccountService;
 
 
 @WebMvcTest(SignUpController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, SignUpControllerTest.TestConfig.class})
+@AutoConfigureMockMvc(addFilters = true)
 public class SignUpControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Autowired
     private AccountService accountService;
 
-//-------------------------------------------------------------------------------------------
-// Scenario 01: The SignUpController using verb get must returns 200 and view called signup.
-//-------------------------------------------------------------------------------------------
+    @BeforeEach
+    public void stup() {
+        Mockito.reset(accountService);
+    }
 
     @Test
-    public void MustReturnStatus200AndViewSignup() throws Exception {
+    public void WhenGetSignUpPath_MustReturnSignUpView() throws Exception {
 
         mockMvc
             .perform(get("/signup"))
@@ -48,13 +57,9 @@ public class SignUpControllerTest {
             .andExpect(view().name("signup"));
 
     }
-
-//------------------------------------------------------------------------------------------------------
-// Scenario 02: If email exists in DB the SignUpController need cacth the EmailAlreadyExistsException.
-//------------------------------------------------------------------------------------------------------
     
     @Test
-    public void MustCatchTheErrorEmailAlreadyExistsException() throws Exception {
+    public void WhenPostSignUpPathWitExistsEmail_MustReturnEmailAlreadyExistsException() throws Exception {
 
         String email = "test@test.com";
         String errorMessage = "Email " + email + " already exists.";
@@ -64,6 +69,7 @@ public class SignUpControllerTest {
 
         mockMvc
             .perform(post("/signup")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("email", email)
                 .param("password", "12345678")
@@ -78,12 +84,8 @@ public class SignUpControllerTest {
 
     }
 
-//-----------------------------------------------------------------------------------------------------------------------------
-// Scenario 03: If password are not equals the SignUpController need cacth the PasswordAndRepeatPasswordAreNotEqualsException
-//-----------------------------------------------------------------------------------------------------------------------------
-
     @Test
-    public void MustCatchTheErrorPasswordAndRepeatPasswordAreNotEqualsException() throws Exception {
+    public void WhenPostSignUpPathWithDifferentPasswords_MustReturnPasswordAndRepeatPasswordAreNotEqualsException() throws Exception {
 
         String errorMessage = "Passwords are not equals.";
 
@@ -92,6 +94,7 @@ public class SignUpControllerTest {
 
         mockMvc
             .perform(post("/signup")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("email", "test@test.com")
                 .param("password", "12345678")
@@ -106,12 +109,8 @@ public class SignUpControllerTest {
 
     }
 
-//-----------------------------------------------------------------------------------------------------------
-// Scenario 04: If username exists in DB the SignUpController need cacth the UsernameAlreadyExistsException
-//-----------------------------------------------------------------------------------------------------------
-
     @Test
-    public void MustCatchTheErrorUsernameAlreadyExists() throws Exception {
+    public void WhenPostSignUpPathWithExistsUsername_MustReturnUsernameAlreadyExistsException() throws Exception {
 
         String username = "fooandbar123";
         String errorMessage = "Username " + username + " already exists.";
@@ -121,6 +120,7 @@ public class SignUpControllerTest {
 
         mockMvc
             .perform(post("/signup")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("email", "test@test.com")
                 .param("password", "12345678")
@@ -135,26 +135,42 @@ public class SignUpControllerTest {
 
     }
 
-//-----------------------------------------------
-// Scenario 05: If all okay redirect to route /
-//-----------------------------------------------
-
     @Test
-    public void IfAllOkRedirectToIndex() throws Exception {
+    public void WhenPostSignUpPath_MustRedirectToLoginPath() throws Exception {
 
         mockMvc
             .perform(post("/signup")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("email", "test@test.com")
                 .param("password", "12345678")
                 .param("repeatPassword", "1234567")
                 .param("username", "fooandbar123"))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/"));
+            .andExpect(redirectedUrl("/login"));
 
         verify(accountService, times(1)).createAccount(any(SignUpDto.class));
         
     }
 
+
+    @TestConfiguration
+    static class TestConfig {
+
+        @Bean
+        public AccountService accountService() {
+            return Mockito.mock(AccountService.class);
+        }
+
+        @Bean
+        public UserDetailsService userDetailsService() {
+            return username -> org.springframework.security.core.userdetails.User
+                .withUsername(username)
+                .password("password")
+                .roles("USER")
+                .build();
+        }
+
+    }
 
 }
