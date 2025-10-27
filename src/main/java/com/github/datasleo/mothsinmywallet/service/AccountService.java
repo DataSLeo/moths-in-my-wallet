@@ -53,4 +53,8 @@ public class AccountService {
 
     }
 
+    public Long getAccountIdByPrincipalName(String identify) {
+        return accountRepository.findIdByIdentify(identify);
+    }
+
 }

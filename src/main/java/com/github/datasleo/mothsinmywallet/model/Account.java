@@ -1,9 +1,14 @@
 package com.github.datasleo.mothsinmywallet.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,13 +23,21 @@ public class Account {
     private String password;
     private String username;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval=true)
+    private final Set<Tag> tags = new HashSet<>();
+
+    public Account() {}
+
     public Account(String email, String password, String username) {
         this.email = email;
         this.password = password;
         this.username = username;
     }
 
-    public Account() {}
+    public void addTag(Tag tag) {
+        tags.add(tag);
+        tag.setAccount(this);
+    }
 
     public Long getId() {
         return id;

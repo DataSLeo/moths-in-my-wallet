@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="pt-br">
+<head>
+    <title>Tag edit - Moths In My Wallet</title>
+    <meta charset="UTF-8" />
+</head>
+<body>
+
+    <h1>Tag manager</h1>
+
+    <form th:action="@{/tag-manager/{id}(id=${tag.id})}" method="POST">
+
+        <input type="hidden" name="_method" value="patch" />
+
+        <div>
+            <label for="tagname">Tag name:</label>
+            <input type="text" id="tagname" name="tagName" th:value="${tag.TagName}" placeholder="Tag name" required />
+        </div>
+
+        <div>
+            <label for="tagdescription">Tag description:</label>
+            <textarea id="tagdescription" name="tagDescription" th:text="${tag.TagDescription}"></textarea>
+        </div>
+
+        <button type="submit">Update tag</button>
+
+    </form>
+
+</body>
+</html>
