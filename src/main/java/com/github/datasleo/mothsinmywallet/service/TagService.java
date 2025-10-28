@@ -31,12 +31,12 @@ public class TagService {
         String tagDescription = dto.getTagDescription();
         Long accountId = dto.getAccountId();
 
+        Account account = accountRepository.findById(accountId)
+            .orElseThrow(() -> new AccountIdWasNotFoundedException("Account id " + accountId + " was not founded."));
+
         if(tagRepository.findByTagNameAndAccountId(tagName, accountId).isPresent()){
             throw new TagNameAlreadyExistsException("Tag " + tagName + " already exists.");
         }
-
-        Account account = accountRepository.findById(accountId)
-            .orElseThrow(() -> new AccountIdWasNotFoundedException("Account id " + accountId + " was not founded."));
 
         Tag tag = new Tag();
 
@@ -57,7 +57,7 @@ public class TagService {
         Optional<Tag> optionalTag = tagRepository.findByIdAndAccountId(tagId, accountId);
 
         if(optionalTag.isEmpty()) {
-            throw new TagNotFoundOrNotAuthorizedException("Tag not found or not authorized");
+            throw new TagNotFoundOrNotAuthorizedException("Tag not found or not authorized.");
         }
 
         return optionalTag.get();
@@ -69,7 +69,7 @@ public class TagService {
         Optional<Tag> optionalTag = tagRepository.findByIdAndAccountId(tagId, accountId);
 
         if (optionalTag.isEmpty()) {
-            throw new TagNotFoundOrNotAuthorizedException("Tag not found or not authorized");
+            throw new TagNotFoundOrNotAuthorizedException("Tag not found or not authorized.");
         }
 
         Tag tagToDelete = optionalTag.get();
@@ -85,11 +85,11 @@ public class TagService {
 
 
         Tag existingTag = tagRepository.findByIdAndAccountId(tagId, accountId)
-            .orElseThrow(() -> new TagNotFoundOrNotAuthorizedException("Tag not found or not authorized"));
+            .orElseThrow(() -> new TagNotFoundOrNotAuthorizedException("Tag not found or not authorized."));
 
         if(!existingTag.getTagName().equals(tagNameDto)) {
             if(tagRepository.findByTagNameAndAccountId(tagNameDto, accountId).isPresent()) {
-                throw new TagNameAlreadyExistsException("Tag '" + tagNameDto + "' already existis in this account.");
+                throw new TagNameAlreadyExistsException("Tag '" + tagNameDto + "' already exists in this account.");
             }
         }
 
