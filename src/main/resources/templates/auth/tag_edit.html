@@ -8,23 +8,27 @@
 
     <h1>Tag manager</h1>
 
-    <form th:action="@{/tag-manager/{id}(id=${tag.id})}" method="POST">
+    <div th:if="${tag != null}">
 
-        <input type="hidden" name="_method" value="patch" />
+        <form th:action="@{/tag-manager/{id}(id=${tag.id})}" method="POST">
 
-        <div>
-            <label for="tagname">Tag name:</label>
-            <input type="text" id="tagname" name="tagName" th:value="${tag.TagName}" placeholder="Tag name" required />
-        </div>
+            <input type="hidden" name="_method" value="patch" />
 
-        <div>
-            <label for="tagdescription">Tag description:</label>
-            <textarea id="tagdescription" name="tagDescription" th:text="${tag.TagDescription}"></textarea>
-        </div>
+            <div>
+                <label for="tagname">Tag name:</label>
+                <input type="text" id="tagname" name="tagName" th:value="${tag.TagName}" placeholder="Tag name" required />
+            </div>
 
-        <button type="submit">Update tag</button>
+            <div>
+                <label for="tagdescription">Tag description:</label>
+                <textarea id="tagdescription" name="tagDescription" th:text="${tag.TagDescription}"></textarea>
+            </div>
 
-    </form>
+            <button type="submit">Update tag</button>
+
+        </form>
+
+    </div>
 
 </body>
 </html>
