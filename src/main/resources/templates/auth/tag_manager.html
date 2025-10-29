@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="pt-br">
+<head>
+    <title>Tag manager - Moths In My Wallet</title>
+    <meta charset="UTF-8" />
+</head>
+<body>
+
+    <div th:if="${success}">
+        <p th:text="${success}"></p>
+    </div>
+
+    <div th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+
+
+    <h1>Tag manager</h1>
+
+    <form th:action="@{/tag-manager}" method="POST">
+
+        <div>
+            <label for="tagname">Tag name: </label>
+            <input type="text" id="tagname" name="tagName" placeholder="Tag name" required>
+        </div>
+
+        <div>
+            <label for="tagdescription">Tag description: </label>
+            <textarea id="tagdescription" name="tagDescription"></textarea>
+        </div>
+
+        <button type="submit">Create tag</button>
+
+    </form>
+
+    <hr>
+
+    <table th:if="${tags != null and not #lists.isEmpty(tags)}">
+        <thead>
+            <tr>
+                <th>Tag name</th>
+                <th>Tag description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="tag : ${tags}">
+                <td th:text="${tag.TagName}"></td>
+                <td th:text="${tag.TagDescription}"></td>
+                <td>
+                    <form th:action="@{/tag-manager/{id}(id=${tag.id})}" method="POST">
+                        <input type="hidden" name="_method" value="delete" />
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>  
+                <td>
+                    <form th:action="@{/tag-manager/{id}/edit (id=${tag.id})}" method="GET">
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
