@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.github.datasleo.mothsinmywallet.dto.TagDto;
-import com.github.datasleo.mothsinmywallet.exception.AccountIdWasNotFoundedException;
+import com.github.datasleo.mothsinmywallet.exception.UnauthorizedAccountException;
 import com.github.datasleo.mothsinmywallet.exception.TagNameAlreadyExistsException;
 import com.github.datasleo.mothsinmywallet.exception.TagNotFoundOrNotAuthorizedException;
 import com.github.datasleo.mothsinmywallet.model.Account;
@@ -32,7 +32,7 @@ public class TagService {
         Long accountId = dto.getAccountId();
 
         Account account = accountRepository.findById(accountId)
-            .orElseThrow(() -> new AccountIdWasNotFoundedException("Account id " + accountId + " was not founded."));
+            .orElseThrow(() -> new UnauthorizedAccountException("Account id " + accountId + " was not founded."));
 
         if(tagRepository.findByTagNameAndAccountId(tagName, accountId).isPresent()){
             throw new TagNameAlreadyExistsException("Tag " + tagName + " already exists.");

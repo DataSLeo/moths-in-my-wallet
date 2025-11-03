@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.github.datasleo.mothsinmywallet.dto.TagDto;
-import com.github.datasleo.mothsinmywallet.exception.AccountIdWasNotFoundedException;
+import com.github.datasleo.mothsinmywallet.exception.UnauthorizedAccountException;
 import com.github.datasleo.mothsinmywallet.exception.TagNameAlreadyExistsException;
 import com.github.datasleo.mothsinmywallet.exception.TagNotFoundOrNotAuthorizedException;
 import com.github.datasleo.mothsinmywallet.model.Tag;
@@ -60,7 +60,7 @@ public class TagController {
             tagService.createTag(tagDto);
             model.addAttribute("success", "Tag '" + tagDto.getTagName() + "' was created with succcess.");
 
-        } catch (TagNameAlreadyExistsException | AccountIdWasNotFoundedException e) {
+        } catch (TagNameAlreadyExistsException | UnauthorizedAccountException e) {
             
             model.addAttribute("error", e.getMessage());
 
