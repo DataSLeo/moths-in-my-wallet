@@ -26,6 +26,9 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval=true)
     private final Set<Tag> tags = new HashSet<>();
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval=true)
+    private final Set<PaymentMethod> payments = new HashSet<>();
+
     public Account() {}
 
     public Account(String email, String password, String username) {
@@ -37,6 +40,21 @@ public class Account {
     public void addTag(Tag tag) {
         tags.add(tag);
         tag.setAccount(this);
+    }
+
+    public void addPayment(PaymentMethod payment) {
+        payments.add(payment);
+        payment.setAccount(this);
+    }
+
+    public void removeTag(Tag tag) {
+        tags.remove(tag);
+        tag.setAccount(null);
+    }
+
+    public void removePayment(PaymentMethod payment) {
+        payments.remove(payment);
+        payment.setAccount(null);
     }
 
     public Long getId() {
@@ -69,6 +87,14 @@ public class Account {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public Set<PaymentMethod> getPayments() {
+        return payments;
     }
 
 }

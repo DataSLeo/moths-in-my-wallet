@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.github.datasleo.mothsinmywallet.dto.TagDto;
-import com.github.datasleo.mothsinmywallet.exception.AccountIdWasNotFoundedException;
+import com.github.datasleo.mothsinmywallet.exception.UnauthorizedAccountException;
 import com.github.datasleo.mothsinmywallet.exception.TagNameAlreadyExistsException;
 import com.github.datasleo.mothsinmywallet.exception.TagNotFoundOrNotAuthorizedException;
 import com.github.datasleo.mothsinmywallet.model.Account;
@@ -89,8 +89,8 @@ public class TagServiceTest {
 
 
         // ACT & ASSERT
-        AccountIdWasNotFoundedException thrown = assertThrows(
-            AccountIdWasNotFoundedException.class,
+        UnauthorizedAccountException thrown = assertThrows(
+            UnauthorizedAccountException.class,
             () -> tagService.createTag(dto)
         );
 

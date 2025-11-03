@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <title>Payment method manager - Moths In My Wallet</title>
+    <meta charset="UTF-8" />
+</head>
+<body>
+    
+    <div th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+
+    <div th:if="${success}">
+        <p th:text="${success}"></p>
+    </div>
+
+    <h1>Payment method manager</h1>
+
+    <a href="/payment-method/add">Add a payment method</a>
+    
+    <div th:if="${error} or ${success}">
+        <a href="/payment-method">Update page</a>
+    </div>
+
+    <div th:if="${payments_method != null and not #lists.isEmpty(payments_method)}">
+
+        <hr>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="payment_method : ${payments_method}">
+                    <td th:text="${payment_method.PaymentName}"></td>
+                    <td th:text="${payment_method.PaymentDescription}"></td>
+                    <td>
+                        <form th:action="@{/payment-method/edit/{id}(id=${payment_method.id})}" method="">
+                            <button>Update</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/payment-method/delete/{id}(id=${payment_method.id})}" method="POST">
+                            <input type="hidden" name="_method" value="delete">
+                            <button>Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+</html>
+

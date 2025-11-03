@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <title>Add a payment method - Moths In My Wallet</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+    <div th:if="${success}">
+        <p th:text="${success}"></p>
+    </div>
+
+    <div th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+
+    <h1>Add payment methods</h1>
+
+    <form th:action="@{/payment-method/add}" method="POST">
+        
+        <div>
+            <label for="payment_method_name">Payment method name</label>
+            <input id="payment_method_name" name="paymentName" placeholder="Payment method name" required>
+        </div>
+
+        <div>
+            <label for="payment_method_description">Payment method description</label>
+            <textarea id="payment_method_description" name="paymentDescription" placeholder="Payment method description"></textarea>
+        </div>
+
+        <button type="submit">Create</button>
+
+    </form>
+
+    <a href="/payment-method">Return to payment method manager</a>
+    
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <title>Edit a payment method - Moths In My Wallet</title>
+    <meta charset="UTF-8">
+</head>
+
+    <div th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+
+    <form th:if="${error} == null" th:action="@{/payment-method/edit/{id}(id=${id})}" method="POST">
+
+        <input type="hidden" name="_method" value="patch">
+
+        <div>
+            <label for="payment_method_name">Payment method name</label>
+            <input id="payment_method_name" name="paymentName" placeholder="Payment method name" th:value="${paymentName}" required>
+        </div>
+
+        <div>
+            <label for="payment_method_description">Payment method description</label>
+            <textarea id="payment_method_description" name="paymentDescription" placeholder="Payment method description" th:text="${paymentDescription}"></textarea>
+        </div>
+
+        <button type="submit">Update</button>
+
+    </form>
+
+    <a href="/payment-method">Return to payment method manager</a> 
+
+</html>
