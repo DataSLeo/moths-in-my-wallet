@@ -7,7 +7,8 @@
 <body>
     <h1>Welcome <span th:text="${username}"></span></h1>
 
-    <a href="/tag-manager">Tag manager</a>
+    <a href="/tag-manager">Tags manager</a>
+    <a href="/payment-method">Payment methods manager</a>
 
     <form th:action="@{/logout}" method="POST">
         <button type="submit">Logout</button>
